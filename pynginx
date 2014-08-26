@@ -13,10 +13,9 @@ url="http://10.2.2.1/status"
 nagios=None		#Nagios instance url
 
 lock=Lock()
-name=Lookup('names.json')
+name=Lookup("names.json")
 
 print lock.lock
-print "Checking for lockfile..."
 if lock.create():
 	statusJson=json.loads(urlopen(url,timeout=timeout).read())
 	for upstream in statusJson["upstreams"]:
@@ -27,3 +26,5 @@ if lock.create():
 			host=name.lookup(instance["server"])
 			print host + " - " + state + " - " + downtime
 	lock.destroy()
+	print name.names
+	name.writeDNS()
