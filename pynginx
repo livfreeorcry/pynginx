@@ -8,6 +8,7 @@ from lookup import Lookup
 import datetime
 import json
 
+
 timeout=10 		#Timeout for request to nginx status page
 url="http://10.2.2.1/status"
 nagios=None		#Nagios instance url
