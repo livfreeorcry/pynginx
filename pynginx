@@ -24,7 +24,7 @@ if lock.create():
 		for instance in statusJson["upstreams"][upstream]:
 			state=instance["state"]
 			downtime=str(datetime.timedelta( seconds = (instance["downtime"]/1000)))
-			host=name.lookup(instance["server"])
+			host=name.lookup(instance["server"], True)
 			print host + " - " + state + " - " + downtime
 	lock.destroy()
 	print name.names

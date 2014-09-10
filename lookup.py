@@ -28,11 +28,19 @@ class Lookup():
 		with open(self.dnsfile, 'w') as file:
 			file.write(str(self.names))
 	
-	def lookup(self, address):
+	def lookup(self, address, qm=None):
 		"""Return hostname of host at address.
 		Returns address if dns doesn't respond.
 		"""
 		ip=self.ip(address)
+
+		if qm:
+			#hackiness for environment specific silliness.
+			#Changes ips, eg from x.x.x.x to x.x.2.x
+			ip=ip.split('.')
+			ip[2]=2
+			ip=(str(ip[0])+'.'+str(ip[1])+'.'+str(ip[2])+'.'+str(ip[3]))
+
 		try:
 			hostname=socket.gethostbyaddr(ip)[0].split('.')[0]
 		except socket.herror:
