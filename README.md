@@ -1,7 +1,8 @@
 pynginx
 =======
 
-`usage: pynginx [-h] [-s] [-a ADD] [-u URL] [-t TOUT] [-e ENV] [C]
+```
+usage: pynginx [-h] [-s] [-a ADD] [-u URL] [-t TOUT] [-e ENV] [C]
 
 Parse nginx json status page out to nagios and cacti
 
@@ -26,4 +27,5 @@ Example:
 	>qa2-sorry!10.2.1.225!10.2.2.225
 	>qa-qt!10.2.1.223!10.2.2.223
 	>qa-qt!10.2.1.223!10.2.2.223
-	>qa2-sorry-ssl!10.2.1.225!10.2.2.225`
+	>qa2-sorry-ssl!10.2.1.225!10.2.2.225
+	```
