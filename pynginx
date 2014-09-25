@@ -5,27 +5,51 @@
 from urllib2 import urlopen
 from lock import Lock
 from lookup import Lookup
+import argparse
 import datetime
 import json
 
-
-timeout=10 		#Timeout for request to nginx status page
-url="http://10.2.2.1/status"
-nagios=None		#Nagios instance url
+parser = argparse.ArgumentParser(description="Parse nginx json status page out to nagios and cacti")
+parser.add_argument('command', metavar='C', type=str, nargs='?')
+parser.add_argument('-s','-secure', dest='secure', action='store_const',
+	const='https://', default='http://')
+parser.add_argument('-a','--address', dest='add', default='127.0.0.1')
+parser.add_argument('-u','--url', dest='url', default='/status')
+parser.add_argument('-t','--timeout', dest='tout', default=10,
+	help="Timeout for requests in seconds")
+parser.add_argument('-e','--environment', dest='env', default=None,
+	help="For environment specific shenanigans. dev, prod, nj.")
+command=parser.parse_args().command
+env=parser.parse_args().env
+timeout=parser.parse_args().tout
+url="{0}{1}{2}".format(
+	parser.parse_args().secure,
+	parser.parse_args().add,
+	parser.parse_args().url)
 
 lock=Lock()
 name=Lookup("names.json")
 
-print lock.lock
+def cactiIndex(blob):
+	for upstream in blob["upstreams"]:
+		for instance in blob["upstreams"][upstream]:
+			print "{0}!{1}!{2}".format(
+				upstream,
+				name.lookup(instance["server"],env),
+				name.ip(instance["server"], env)
+				)
+
 if lock.create():
 	statusJson=json.loads(urlopen(url,timeout=timeout).read())
 	for upstream in statusJson["upstreams"]:
-		print upstream
 		for instance in statusJson["upstreams"][upstream]:
 			state=instance["state"]
 			downtime=str(datetime.timedelta( seconds = (instance["downtime"]/1000)))
 			host=name.lookup(instance["server"], True)
-			print host + " - " + state + " - " + downtime
+			#print host + " - " + state + " - " + downtime
+	if command == 'cacti':
+		cactiIndex(statusJson)
 	lock.destroy()
-	print name.names
+	#print name.names
 	name.writeDNS()
+

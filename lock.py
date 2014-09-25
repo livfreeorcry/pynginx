@@ -20,7 +20,7 @@ Args:
 		if self.check():
 			with open(self.lock, 'w') as file:
 				file.write(str(os.getpid()))
-				print "Creating lockfile"
+				#print "Creating lockfile"
 				return True
 		else: return False
 
@@ -54,5 +54,5 @@ Args:
 			print "Failed to remove lockfile, dying."
 			exit(1)
 		else:
-			print "Removed lockfile."
+			#print "Removed lockfile."
 			return True

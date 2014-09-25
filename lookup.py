@@ -33,14 +33,6 @@ class Lookup():
 		Returns address if dns doesn't respond.
 		"""
 		ip=self.ip(address)
-
-		if qm:
-			#hackiness for environment specific silliness.
-			#Changes ips, eg from x.x.x.x to x.x.2.x
-			ip=ip.split('.')
-			ip[2]=2
-			ip=(str(ip[0])+'.'+str(ip[1])+'.'+str(ip[2])+'.'+str(ip[3]))
-
 		try:
 			hostname=socket.gethostbyaddr(ip)[0].split('.')[0]
 		except socket.herror:
@@ -50,5 +42,16 @@ class Lookup():
 			self.names[ip]=hostname
 			return hostname
 
-	def ip(self, ip):
-		return str(ip.split(':')[0])
+	def ip(self, address, qm=None):
+		ip = str(address.split(':')[0])
+		if qm=='dev':
+			#hackiness for environment specific silliness.
+			#Changes ips, eg from x.x.x.x to x.x.2.x
+			ip=ip.split('.')
+			ip[2]=2
+			ip=(str(ip[0])+'.'+str(ip[1])+'.'+str(ip[2])+'.'+str(ip[3]))
+		elif qm=='prod':
+			ip=ip.split('.')
+			ip[2]=1
+			ip=(str(ip[0])+'.'+str(ip[1])+'.'+str(ip[2])+'.'+str(ip[3]))
+		return ip
