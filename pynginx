@@ -39,9 +39,9 @@ def cactiIndex(blob):
 	for upstream in blob["upstreams"]:
 		for instance in blob["upstreams"][upstream]:
 			print "{0}!{1}!{2}".format(
+				name.lookup(instance["server"],env),
 				upstream,
 				name.ip(instance["server"], env),
-				name.lookup(instance["server"],env),
 				)
 def pblob(blobl):
 	print blob
