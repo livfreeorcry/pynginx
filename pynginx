@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#! python
 #a: James Burke
 #e: jburke@quotemedia.com
 #v: 0.3
@@ -43,14 +43,18 @@ def cactiIndex(blob):
 				name.lookup(instance["server"],env),
 				name.ip(instance["server"], env)
 				)
+def pblob(blobl):
+	print blob
 
 if lock.create():
 	statusJson=json.loads(urlopen(url,timeout=timeout).read())
+	if command == 'blob':
+		pblob(statusJson)
 	for upstream in statusJson["upstreams"]:
 		for instance in statusJson["upstreams"][upstream]:
 			state=instance["state"]
 			downtime=str(datetime.timedelta( seconds = (instance["downtime"]/1000)))
-			host=name.lookup(instance["server"], True)
+			host=name.lookup(instance["server"], env)
 			#print host + " - " + state + " - " + downtime
 	if command == 'cacti':
 		cactiIndex(statusJson)

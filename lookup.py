@@ -17,13 +17,12 @@ class Lookup():
 		self.names = self.readDNS(dnsfile)
 
 	def readDNS(self, dnsfile):
-		if os.path.isfile(dnsfile):
-			with open(dnsfile, 'r+') as file:
-				try:
-					return json.load(file)
-				except ValueError as v:
-					return dict()
-
+		with open(dnsfile, 'r+') as file:
+			try:
+				return json.load(file)
+			except ValueError as v:
+				return dict()
+				
 	def writeDNS(self):
 		with open(self.dnsfile, 'w') as file:
 			file.write(str(self.names))
@@ -32,13 +31,14 @@ class Lookup():
 		"""Return hostname of host at address.
 		Returns address if dns doesn't respond.
 		"""
-		ip=self.ip(address)
+		ip=self.ip(address, qm)
 		try:
 			hostname=socket.gethostbyaddr(ip)[0].split('.')[0]
 		except socket.herror:
 			self.names[ip]="Unkown host"
 			return ip
 		else:
+			print hostname
 			self.names[ip]=hostname
 			return hostname
 
