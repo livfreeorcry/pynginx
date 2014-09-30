@@ -1,16 +1,17 @@
-#! python
+#!/usr/bin/python
 #a: James Burke
 #e: jburke@quotemedia.com
 #v: 0.3
 from urllib2 import urlopen
 from lock import Lock
 from lookup import Lookup
+from cacti import cacti
 import argparse
 import datetime
 import json
 
 parser = argparse.ArgumentParser(description="Parse nginx json status page out to nagios and cacti")
-parser.add_argument('command', metavar='C', type=str, nargs='?',
+parser.add_argument('command', metavar='C', type=str, nargs='*',
 	help="""Command to specify which data you need. 
 	Implemented:
 		Cacti Index""")
@@ -35,30 +36,26 @@ url="{0}{1}{2}".format(
 lock=Lock()
 name=Lookup("names.json")
 
-def cactiIndex(blob):
-	for upstream in blob["upstreams"]:
-		for instance in blob["upstreams"][upstream]:
-			print "{0}!{1}!{2}".format(
-				name.lookup(instance["server"],env),
-				upstream,
-				name.ip(instance["server"], env),
-				)
-def pblob(blobl):
-	print blob
-
-if lock.create():
-	statusJson=json.loads(urlopen(url,timeout=timeout).read())
-	if command == 'blob':
-		pblob(statusJson)
+def state(blob):
 	for upstream in statusJson["upstreams"]:
 		for instance in statusJson["upstreams"][upstream]:
 			state=instance["state"]
 			downtime=str(datetime.timedelta( seconds = (instance["downtime"]/1000)))
 			host=name.lookup(instance["server"], env)
-			#print host + " - " + state + " - " + downtime
-	if command == 'cacti':
-		cactiIndex(statusJson)
+			print host + " - " + state + " - " + downtime
+
+def pblob(blob):
+	print blob
+
+if lock.create():
+	statusJson=json.loads(urlopen(url,timeout=timeout).read())
+	""""""
+	if command[0] == 'blob': pblob(statusJson)
+	elif command[0] == 'state': state(blob)
+	elif command[0] == 'cacti': cacti(statusJson, command)
+	elif command[0] == 'nagios': print "NYI"
+	elif command[0] == None: print "no command"
+	else: print "Command not recognized: {0}".format(command[0])
 	lock.destroy()
-	#print name.names
 	name.writeDNS()
 
