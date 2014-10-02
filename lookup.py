@@ -15,6 +15,7 @@ class Lookup():
 	def __init__(self, dnsfile, qm=None):
 		self.dnsfile = dnsfile
 		self.names = self.readDNS(dnsfile)
+		self.qm = qm
 
 	def readDNS(self, dnsfile):
 		with open(dnsfile, 'w+') as file:
