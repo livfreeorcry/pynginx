@@ -7,7 +7,7 @@ def cacti(blob, names, subcommand):
 	elif subcommand[1]=='query': 
 		for line in cactiQuery(blob, subcommand[2], names): print line
 	elif subcommand[1]=='get':
-		stdout.write( cactiGet(blob, subcommand[2], subcommand[3]) )
+		stdout.write( str(cactiGet(blob, subcommand[2], subcommand[3])) )
 	else: print "Unrecognized command: {0}".format(subcommand[1])
 
 def cactiIndex(blob):
