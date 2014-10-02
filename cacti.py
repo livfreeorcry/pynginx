@@ -6,8 +6,9 @@ def cacti(blob, subcommand):
 	elif subcommand[1]=='query': 
 		for line in cactiQuery(blob, subcommand[2]): print line
 	elif subcommand[1]=='get':
-		print 'get'
+		print cactiGet(blob, subcommand[2], subcommand[3])
 	else: print "Unrecognized command: {0}".format(subcommand[1])
+
 def cactiIndex(blob):
 	results=[]
 	for upstream in blob["upstreams"]:
@@ -17,14 +18,25 @@ def cactiIndex(blob):
 
 def cactiQuery(blob, query):
 	results=[]
-	for upstream in blob["upstreams"]:
-		for instance in blob["upstreams"][upstream]:
-			results.append("!".join([instance["server"], str(instance[query])]))
+	if query == 'upstream':
+		for upstream in blob["upstreams"]:
+			for instance in blob["upstreams"][upstream]:
+				results.append("!".join([instance["server"], upstream]))
+	elif query == 'hostname':
+		for upstream in blob["upstreams"]:
+			for instance in blob["upstreams"][upstream]:
+				results.append("!".join([instance["server"], upstream]))
+	else:
+		for upstream in blob["upstreams"]:
+			for instance in blob["upstreams"][upstream]:
+				results.append("!".join([instance["server"], str(instance[query])]))
 	return results
 
 def cactiGet(blob, query, index):
-	results=[]
+	index=str(index)
 	for upstream in blob["upstreams"]:
 		for instance in blob["upstreams"][upstream]:
-			results.append("!".join([instance["server"], str(instance[query])]))
-	return results
+			if instance["server"]==index:
+				return instance[query]
+	return None
+	
