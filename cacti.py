@@ -1,4 +1,4 @@
-def cacti(blob, subcommand):
+def cacti(blob, names, subcommand):
 	if len(subcommand)<2: 
 		subcommand=['cacti','index']
 	if subcommand[1]=='index': 
@@ -25,7 +25,7 @@ def cactiQuery(blob, query):
 	elif query == 'hostname':
 		for upstream in blob["upstreams"]:
 			for instance in blob["upstreams"][upstream]:
-				results.append("!".join([instance["server"], upstream]))
+				results.append("!".join([instance["server"], names.lookup(instance["server"])]))
 	else:
 		for upstream in blob["upstreams"]:
 			for instance in blob["upstreams"][upstream]:

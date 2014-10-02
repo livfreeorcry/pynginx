@@ -34,15 +34,15 @@ url="{0}{1}{2}".format(
 	parser.parse_args().url)
 
 lock=Lock()
-name=Lookup("names.json")
+names=Lookup("names.json", env)
 
 def state(blob):
 	for upstream in statusJson["upstreams"]:
 		for instance in statusJson["upstreams"][upstream]:
 			state=instance["state"]
 			downtime=str(datetime.timedelta( seconds = (instance["downtime"]/1000)))
-			host=name.lookup(instance["server"], env)
-			print host + " - " + state + " - " + downtime
+			host=names.lookup(instance["server"])
+			print " - ".join([host, state, downtime])
 
 def pblob(blob):
 	print blob
@@ -52,10 +52,10 @@ if lock.create():
 	""""""
 	if command[0] == 'blob': pblob(statusJson)
 	elif command[0] == 'state': state(blob)
-	elif command[0] == 'cacti': cacti(statusJson, command)
+	elif command[0] == 'cacti': cacti(statusJson, names, command)
 	elif command[0] == 'nagios': print "NYI"
 	elif command[0] == None: print "no command"
 	else: print "Command not recognized: {0}".format(command[0])
 	lock.destroy()
-	name.writeDNS()
+	names.writeDNS()
 
