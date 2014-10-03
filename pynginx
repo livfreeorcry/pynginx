@@ -6,6 +6,7 @@ from urllib2 import urlopen
 from lock import Lock
 from lookup import Lookup
 from cacti import cacti
+import sys
 import argparse
 import datetime
 import json
@@ -35,6 +36,9 @@ url="{0}{1}{2}".format(
 
 lock=Lock()
 names=Lookup("names.json", env)
+
+with open("pynginx.log", "a") as log:
+	log.write("{0}\n".format(" ".join(sys.argv[:])))
 
 def state(blob):
 	for upstream in statusJson["upstreams"]:
