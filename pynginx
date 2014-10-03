@@ -35,7 +35,7 @@ url="{0}{1}{2}".format(
 	parser.parse_args().add,
 	parser.parse_args().url)
 
-<<<<<<< HEAD
+
 #Define absolute paths for files to write to because cacti is evil.
 logfile="/var/tmp/pynginx.log"
 lock=Lock("/var/tmp/pynginx.lock")
@@ -44,10 +44,6 @@ names=Lookup("/var/tmp/names.json", env)
 with open(logfile, "a") as log:
 	log.write("{0}\n".format(" ".join(sys.argv[:])))
 
-=======
-lock=Lock("/var/tmp/pynginx.lock")
-names=Lookup("/var/tmp/names.json", env)
->>>>>>> 15784d39e5a7cf3171e10517685c9edf380925be
 def state(blob):
 	for upstream in statusJson["upstreams"]:
 		for instance in statusJson["upstreams"][upstream]:
