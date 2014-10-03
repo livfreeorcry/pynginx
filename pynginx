@@ -58,12 +58,12 @@ if lock.create():
 	elif command[0] == 'nagios': 
 		print "NYI"
 		with open("pynginx.log") as log:
-				log.write("Command {0} NYI".format(command[0])
+				log.write("Command {0} NYI".format(command[0]))
 	elif command[0] == None: print "no command"
 	else: 
 		print "Command not recognized: {0}".format(command[0])
 		with open("pynginx.log") as log:
-				log.write("Command {0} Not Recognized".format(command[0])
+				log.write("Command {0} Not Recognized".format(command[0]))
 	lock.destroy()
 	names.writeDNS()
 
