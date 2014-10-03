@@ -36,9 +36,8 @@ url="{0}{1}{2}".format(
 	parser.parse_args().add,
 	parser.parse_args().url)
 
-lock=Lock()
-names=Lookup("names.json", env)
-
+lock=Lock("/var/tmp/pynginx.lock")
+names=Lookup("/var/tmp/names.json", env)
 def state(blob):
 	for upstream in statusJson["upstreams"]:
 		for instance in statusJson["upstreams"][upstream]:
