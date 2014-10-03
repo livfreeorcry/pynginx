@@ -43,6 +43,8 @@ def state(blob):
 			downtime=str(datetime.timedelta( seconds = (instance["downtime"]/1000)))
 			host=names.lookup(instance["server"])
 			print " - ".join([host, state, downtime])
+			with open("pynginx.log") as log:
+				log.write(" - ".join([host, state, downtime]))
 
 def pblob(blob):
 	print blob
@@ -53,9 +55,15 @@ if lock.create():
 	if command[0] == 'blob': pblob(statusJson)
 	elif command[0] == 'state': state(blob)
 	elif command[0] == 'cacti': cacti(statusJson, names, command)
-	elif command[0] == 'nagios': print "NYI"
+	elif command[0] == 'nagios': 
+		print "NYI"
+		with open("pynginx.log") as log:
+				log.write("Command {0} NYI".format(command[0])
 	elif command[0] == None: print "no command"
-	else: print "Command not recognized: {0}".format(command[0])
+	else: 
+		print "Command not recognized: {0}".format(command[0])
+		with open("pynginx.log") as log:
+				log.write("Command {0} Not Recognized".format(command[0])
 	lock.destroy()
 	names.writeDNS()
 
