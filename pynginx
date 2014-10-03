@@ -9,7 +9,9 @@ import sys
 import argparse
 import datetime
 import json
-with open("pynginx.log", "a") as log:
+
+logfile="/var/tmp/pynginx.log"
+with open(logfile, "a") as log:
 	log.write("{0}\n".format(" ".join(sys.argv[:])))
 parser = argparse.ArgumentParser(description="Parse nginx json status page out to nagios and cacti")
 parser.add_argument('command', metavar='C', type=str, nargs='*',
@@ -44,7 +46,7 @@ def state(blob):
 			downtime=str(datetime.timedelta( seconds = (instance["downtime"]/1000)))
 			host=names.lookup(instance["server"])
 			print " - ".join([host, state, downtime])
-			with open("pynginx.log", "a") as log:
+			with open(logfile, "a") as log:
 				log.write(" - ".join([host, state, downtime]))
 				log.write("/n")
 
@@ -59,12 +61,12 @@ if lock.create():
 	elif command[0] == 'cacti': cacti(statusJson, names, command)
 	elif command[0] == 'nagios': 
 		print "NYI"
-		with open("pynginx.log", "a") as log:
+		with open(logfile, "a") as log:
 				log.write("Command {0} NYI\n".format(command[0]))
 	elif command[0] == None: print "no command \n"
 	else: 
 		print "Command not recognized: {0}".format(command[0])
-		with open("pynginx.log", "a") as log:
+		with open(logfile, "a") as log:
 				log.write("Command {0} Not Recognized\n".format(command[0]))
 	lock.destroy()
 	names.writeDNS()
