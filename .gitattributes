@@ -1,0 +1,2 @@
+*.py -crlf
+*.json -crlf
