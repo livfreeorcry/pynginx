@@ -1,6 +1,5 @@
 from sys import stdout
-logfile="/var/tmp/pynginx.log"
-def cacti(blob, names, subcommand):
+def cacti(blob, names, subcommand, logfile):
 	if len(subcommand)<2: 
 		subcommand=['cacti','index']
 	if subcommand[1]=='index': 
