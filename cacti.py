@@ -1,12 +1,10 @@
 from sys import stdout
-def cacti(blob, names, subcommand, logfile):
+def cacti(blob, names, subcommand):
 	if len(subcommand)<2: 
 		subcommand=['cacti','index']
 	if subcommand[1]=='index': 
 		for line in cactiIndex(blob): 
 			print line
-			with open(logfile, "a") as log:
-				log.write(line+"\n")
 	elif subcommand[1]=='count':
 		count = 0
 		for line in cactiIndex(blob):
@@ -15,16 +13,10 @@ def cacti(blob, names, subcommand, logfile):
 	elif subcommand[1]=='query': 
 		for line in cactiQuery(blob, subcommand[2], names): 
 			print line
-			with open(logfile, "a") as log:
-				log.write(line+"\n")
 	elif subcommand[1]=='get':
 		stdout.write( str(cactiGet(blob, subcommand[2], subcommand[3])) )
-		with open(logfile, "a") as log:
-				log.write(str(cactiGet(blob, subcommand[2], subcommand[3]))+"\n")
 	else: 
 		print "Unrecognized command: {0}".format(subcommand[1])
-		with open(logfile, "a") as log:
-				log.write("Unrecognized command: {0}\n".format(subcommand[1]))
 
 def cactiIndex(blob):
 	results=[]
