@@ -8,6 +8,11 @@ def cacti(blob, names, subcommand):
 			print line
 			with open(logfile, "a") as log:
 				log.write(line+"\n")
+	elif subcommand[1]=='count':
+		count = 0
+		for line in cactiIndex(blob):
+			count += 1
+		print count
 	elif subcommand[1]=='query': 
 		for line in cactiQuery(blob, subcommand[2], names): 
 			print line
