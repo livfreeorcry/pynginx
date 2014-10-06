@@ -1,5 +1,4 @@
 import socket
-import __main__ as main
 
 def lookup(self, address, env=False):
 	"""Return hostname of host at address.
