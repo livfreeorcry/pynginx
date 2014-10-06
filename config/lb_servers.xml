@@ -1,0 +1,64 @@
+<interface>
+        <name>Get LB Server</name>
+        <script_path>/usr/local/src/pynginx/pynginx</script_path>
+        <arg_prepend>-s -a |host_hostname| cacti</arg_prepend>
+	<arg_index>index</arg_index>
+        <arg_query>query</arg_query>
+        <arg_get>get</arg_get>
+	<arg_num_indexes>count</arg_num_indexes>
+	<output_delimeter>!</output_delimeter>
+
+        <fields>
+		<index>
+			<name>lbindex</name>
+			<direction>input</direction>
+			<query_name>server</query_name>
+		</index>
+                <lbservice>
+                        <name>service</name>
+                        <direction>input</direction>
+                        <query_name>server</query_name>
+                </lbservice>
+                <lbupstreams>
+                        <name>upstreams</name>
+                        <direction>input</direction>
+                        <query_name>upstream</query_name>
+                </lbupstreams>
+		<lbhostname>
+			<name>hostname</name>
+                        <direction>input</direction>
+                        <query_name>hostname</query_name>
+		</lbhostname>
+                <lbstate>
+                        <name>state</name>
+                        <direction>input</direction>
+                        <query_name>state</query_name>
+                </lbstate>
+		<lbrequests>
+			<name>requests</name>
+			<direction>output</direction>
+			<query_name>requests</query_name>
+		</lbrequests>
+		<lbactive>
+			<name>active</name>
+			<direction>output</direction>
+			<query_name>active</query_name>
+		</lbactive>
+		<lbkeepalive>
+			<name>keepalive</name>
+			<direction>output</direction>
+			<query_name>keepalive</query_name>
+		</lbkeepalive>
+		<lbsent>
+			<name>sent</name>
+			<direction>output</direction>
+			<query_name>sent</query_name>
+		</lbsent>
+		<lbrcvd>
+			<name>rcvd</name>
+			<direction>output</direction>
+			<query_name>received</query_name>
+		</lbrcvd>
+        </fields>
+
+</interface>
