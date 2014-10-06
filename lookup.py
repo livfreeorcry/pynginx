@@ -21,10 +21,10 @@ def ip(address, env=False):
 		#hackiness for environment specific silliness.
 		#Changes ips, eg from x.x.x.x to x.x.2.x
 		ip=ip.split('.')
-		ip[2]=2
-		ip=("".join)(ip)
+		ip[2]="2"
+		ip="".join(ip)
 	elif env=='prod':
 		ip=ip.split('.')
-		ip[2]=1
-		ip=("".join)(ip)
+		ip[2]="1"
+		ip="".join(ip)
 	return ip
