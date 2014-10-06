@@ -2,9 +2,8 @@
 #a: James Burke
 #e: jburke@quotemedia.com
 from urllib2 import urlopen
-from lookup import Lookup
+from lookup import lookup
 from cacti import cacti
-import sys
 import argparse
 import datetime
 import json
@@ -18,57 +17,35 @@ parser.add_argument('command', metavar='C', type=str, nargs='*',
 		Cacti Index""")
 parser.add_argument('-s','--secure', dest='secure', action='store_const',
 	const='https://', default='http://', help='Flag https, defaults to http.')
-parser.add_argument('-a','--address', dest='add', default='127.0.0.1',
+parser.add_argument('-a','--address', dest='address', default='127.0.0.1',
 	help='hostname or ip address for the nginx host. Defaults to localhost.')
 parser.add_argument('-u','--url', dest='url', default='/status',
 	help='uri path for the status page')
-parser.add_argument('-t','--timeout', dest='tout', default=10,
+parser.add_argument('-t','--timeout', dest='timeout', default=10,
 	help="Timeout for requests in seconds")
 parser.add_argument('-e','--environment', dest='env', default=None,
 	help="For environment specific shenanigans. dev, prod, nj.")
-command=parser.parse_args().command
-env=parser.parse_args().env
-timeout=parser.parse_args().tout
-url="{0}{1}{2}".format(
-	parser.parse_args().secure,
-	parser.parse_args().add,
-	parser.parse_args().url)
+parser.add_argument('-v', '--verbose', dest='verbose', action='store_const',
+	const=True, default=False)
+#Put input into its proper places.
+args = vars(parser.parse_args())
+url="{0}{1}{2}".format(args['secure'], args['address'], args['url'])
+#names=Lookup(env, env)
 
-
-#Define absolute paths for files to write to because cacti is evil.
-logfile="/var/tmp/pynginx.log"
-names=Lookup("/var/tmp/names.json", env)
-
-with open(logfile, "a") as log:
-	log.write("{0}\n".format(" ".join(sys.argv[:])))
-
+#Simply prints out a few pieces of info as a simple test.
 def state(blob):
 	for upstream in statusJson["upstreams"]:
 		for instance in statusJson["upstreams"][upstream]:
 			state=instance["state"]
 			downtime=str(datetime.timedelta( seconds = (instance["downtime"]/1000)))
-			host=names.lookup(instance["server"])
+			host=lookup(instance["server"], env)
 			print " - ".join([host, state, downtime])
-			with open(logfile, "a") as log:
-				log.write(" - ".join([host, state, downtime]))
-				log.write("/n")
 
-def pblob(blob):
-	print blob
-
-statusJson=json.loads(urlopen(url,timeout=timeout).read())
-""""""
-
-if command[0] == 'blob': pblob(statusJson)
+statusJson=json.loads(urlopen(url,timeout=args['timeout']).read())
+command=args['command']
+if command[0] == 'blob': print statusJson
 elif command[0] == 'state': state(blob)
-elif command[0] == 'cacti': cacti(statusJson, names, command)
-elif command[0] == 'nagios': 
-	print "NYI"
-	with open(logfile, "a") as log:
-			log.write("Command {0} NYI\n".format(command[0]))
+elif command[0] == 'cacti': cacti(statusJson, args['env'], command)
+elif command[0] == 'nagios': print "NYI"
 elif command[0] == None: print "no command \n"
-else: 
-	print "Command not recognized: {0}".format(command[0])
-	with open(logfile, "a") as log:
-			log.write("Command {0} Not Recognized\n".format(command[0]))
-names.writeDNS()
+else: print "Command not recognized: {0}".format(command[0])

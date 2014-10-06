@@ -1,17 +1,15 @@
 from sys import stdout
-def cacti(blob, names, subcommand):
+from lookup import lookup
+def cacti(blob, env, subcommand):
 	if len(subcommand)<2: 
 		subcommand=['cacti','index']
 	if subcommand[1]=='index': 
 		for line in cactiIndex(blob): 
 			print line
 	elif subcommand[1]=='count':
-		"""count = 0
-								for line in cactiIndex(blob):
-									count += 1"""
 		print len(cactiIndex(blob))
 	elif subcommand[1]=='query': 
-		for line in cactiQuery(blob, subcommand[2], names): 
+		for line in cactiQuery(blob, subcommand[2], env): 
 			print line
 	elif subcommand[1]=='get':
 		stdout.write( str(cactiGet(blob, subcommand[2], subcommand[3])) )
@@ -25,7 +23,7 @@ def cactiIndex(blob):
 			results.append(instance["server"])
 	return results
 
-def cactiQuery(blob, query, names):
+def cactiQuery(blob, query, env):
 	results=[]
 	if query == 'upstream':
 		for upstream in blob["upstreams"]:
@@ -34,7 +32,7 @@ def cactiQuery(blob, query, names):
 	elif query == 'hostname':
 		for upstream in blob["upstreams"]:
 			for instance in blob["upstreams"][upstream]:
-				results.append("!".join([instance["server"], names.lookup(instance["server"])]))
+				results.append("!".join([instance["server"], lookup(instance["server"], env)]))
 	else:
 		for upstream in blob["upstreams"]:
 			for instance in blob["upstreams"][upstream]:
