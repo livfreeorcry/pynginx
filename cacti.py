@@ -6,10 +6,10 @@ def cacti(blob, names, subcommand):
 		for line in cactiIndex(blob): 
 			print line
 	elif subcommand[1]=='count':
-		count = 0
-		for line in cactiIndex(blob):
-			count += 1
-		print count
+		"""count = 0
+								for line in cactiIndex(blob):
+									count += 1"""
+		print len(cactiIndex(blob))
 	elif subcommand[1]=='query': 
 		for line in cactiQuery(blob, subcommand[2], names): 
 			print line
