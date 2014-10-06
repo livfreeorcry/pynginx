@@ -9,9 +9,8 @@ import argparse
 import datetime
 import json
 
-logfile="/var/tmp/pynginx.log"
-with open(logfile, "a") as log:
-	log.write("{0}\n".format(" ".join(sys.argv[:])))
+
+
 parser = argparse.ArgumentParser(description="Parse nginx json status page out to nagios and cacti")
 parser.add_argument('command', metavar='C', type=str, nargs='*',
 	help="""Command to specify which data you need. 
@@ -35,7 +34,14 @@ url="{0}{1}{2}".format(
 	parser.parse_args().add,
 	parser.parse_args().url)
 
+
+#Define absolute paths for files to write to because cacti is evil.
+logfile="/var/tmp/pynginx.log"
 names=Lookup("/var/tmp/names.json", env)
+
+with open(logfile, "a") as log:
+	log.write("{0}\n".format(" ".join(sys.argv[:])))
+
 def state(blob):
 	for upstream in statusJson["upstreams"]:
 		for instance in statusJson["upstreams"][upstream]:
@@ -52,6 +58,7 @@ def pblob(blob):
 
 statusJson=json.loads(urlopen(url,timeout=timeout).read())
 """"""
+
 if command[0] == 'blob': pblob(statusJson)
 elif command[0] == 'state': state(blob)
 elif command[0] == 'cacti': cacti(statusJson, names, command)
@@ -65,4 +72,3 @@ else:
 	with open(logfile, "a") as log:
 			log.write("Command {0} Not Recognized\n".format(command[0]))
 names.writeDNS()
-
