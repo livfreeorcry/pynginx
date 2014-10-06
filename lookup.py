@@ -22,9 +22,9 @@ def ip(address, env=False):
 		#Changes ips, eg from x.x.x.x to x.x.2.x
 		ip=ip.split('.')
 		ip[2]=2
-		ip=(str(ip[0])+'.'+str(ip[1])+'.'+str(ip[2])+'.'+str(ip[3]))
+		ip=("".join)(ip)
 	elif env=='prod':
 		ip=ip.split('.')
 		ip[2]=1
-		ip=(str(ip[0])+'.'+str(ip[1])+'.'+str(ip[2])+'.'+str(ip[3]))
+		ip=("".join)(ip)
 	return ip
