@@ -30,7 +30,6 @@ parser.add_argument('-v', '--verbose', dest='verbose', action='store_const',
 #Put input into its proper places.
 args = vars(parser.parse_args())
 url="{0}{1}{2}".format(args['secure'], args['address'], args['url'])
-#names=Lookup(env, env)
 
 #Simply prints out a few pieces of info as a simple test.
 def state(blob):

@@ -1,18 +1,18 @@
 import socket
 
-def lookup(self, address, env=False):
+def lookup(address, env=False):
 	"""Return hostname of host at address.
 	Returns address if dns doesn't respond.
 	"""
-	ip=ip(address, env)
+	ipaddress=ip(address, env)
 	try:
-		hostname=socket.gethostbyaddr(ip)[0].split('.')[0]
+		hostname=socket.gethostbyaddr(ipaddress)[0].split('.')[0]
 	except socket.herror:
-		return ip
+		return ipaddress
 	else:
 		return hostname
 
-def ip(self, address, qm=False):
+def ip(address, env=False):
 	"""Split the address from its port, since nginx passes
 	it over together.
 	We also have the option for some """
