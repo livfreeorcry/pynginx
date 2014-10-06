@@ -2,7 +2,6 @@
 #a: James Burke
 #e: jburke@quotemedia.com
 from urllib2 import urlopen
-from lock import Lock
 from lookup import Lookup
 from cacti import cacti
 import sys
@@ -36,7 +35,6 @@ url="{0}{1}{2}".format(
 	parser.parse_args().add,
 	parser.parse_args().url)
 
-lock=Lock("/var/tmp/pynginx.lock")
 names=Lookup("/var/tmp/names.json", env)
 def state(blob):
 	for upstream in statusJson["upstreams"]:
@@ -52,21 +50,19 @@ def state(blob):
 def pblob(blob):
 	print blob
 
-if lock.create():
-	statusJson=json.loads(urlopen(url,timeout=timeout).read())
-	""""""
-	if command[0] == 'blob': pblob(statusJson)
-	elif command[0] == 'state': state(blob)
-	elif command[0] == 'cacti': cacti(statusJson, names, command)
-	elif command[0] == 'nagios': 
-		print "NYI"
-		with open(logfile, "a") as log:
-				log.write("Command {0} NYI\n".format(command[0]))
-	elif command[0] == None: print "no command \n"
-	else: 
-		print "Command not recognized: {0}".format(command[0])
-		with open(logfile, "a") as log:
-				log.write("Command {0} Not Recognized\n".format(command[0]))
-	lock.destroy()
-	names.writeDNS()
+statusJson=json.loads(urlopen(url,timeout=timeout).read())
+""""""
+if command[0] == 'blob': pblob(statusJson)
+elif command[0] == 'state': state(blob)
+elif command[0] == 'cacti': cacti(statusJson, names, command)
+elif command[0] == 'nagios': 
+	print "NYI"
+	with open(logfile, "a") as log:
+			log.write("Command {0} NYI\n".format(command[0]))
+elif command[0] == None: print "no command \n"
+else: 
+	print "Command not recognized: {0}".format(command[0])
+	with open(logfile, "a") as log:
+			log.write("Command {0} Not Recognized\n".format(command[0]))
+names.writeDNS()
 
