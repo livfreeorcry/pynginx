@@ -9,14 +9,12 @@ import datetime
 import json
 
 
-
+#Sets up command line positional args. 'help' strings should clarify each flag.
 parser = argparse.ArgumentParser(description="Parse nginx json status page out to nagios and cacti")
 parser.add_argument('command', metavar='C', type=str, nargs='*',
-	help="""Command to specify which data you need. 
-	Implemented:
-		Cacti Index""")
+	help="Command to specify which data you need.")
 parser.add_argument('-s','--secure', dest='secure', action='store_const',
-	const='https://', default='http://', help='Flag https, defaults to http.')
+	const='https://', default='http://', help='Flag to enable https, defaults to http.')
 parser.add_argument('-a','--address', dest='address', default='127.0.0.1',
 	help='hostname or ip address for the nginx host. Defaults to localhost.')
 parser.add_argument('-u','--url', dest='url', default='/status',
@@ -27,12 +25,16 @@ parser.add_argument('-e','--environment', dest='env', default=None,
 	help="For environment specific shenanigans. dev, prod, nj.")
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_const',
 	const=True, default=False)
+
 #Put input into its proper places.
 args = vars(parser.parse_args())
-url="{0}{1}{2}".format(args['secure'], args['address'], args['url'])
 
-#Simply prints out a few pieces of info as a simple test.
+#puts the pieces together for the Nginx status page's URL as string
+nginxurl="{0}{1}{2}".format(args['secure'], args['address'], args['url'])
+
+
 def state(blob):
+	#Simply prints out a few pieces of info as a simple test.
 	for upstream in statusJson["upstreams"]:
 		for instance in statusJson["upstreams"][upstream]:
 			state=instance["state"]
@@ -40,7 +42,7 @@ def state(blob):
 			host=lookup(instance["server"], env)
 			print " - ".join([host, state, downtime])
 
-statusJson=json.loads(urlopen(url,timeout=args['timeout']).read())
+statusJson=json.loads(urlopen(nginxurl,timeout=args['timeout']).read())
 command=args['command']
 if command[0] == 'blob': print statusJson
 elif command[0] == 'state': state(blob)
