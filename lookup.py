@@ -29,9 +29,9 @@ def ip(address, env=False):
 		#Changes ips, eg from 8.8.8.8 to 8.8.2.8
 		ip=ip.split('.')
 		ip[2]="2"
-		ip="".join(ip)
+		ip=".".join(ip)
 	elif env=='prod':
 		ip=ip.split('.')
 		ip[2]="1"
-		ip="".join(ip)
+		ip=".".join(ip)
 	return ip

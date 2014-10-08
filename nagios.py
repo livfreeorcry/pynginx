@@ -1,27 +1,49 @@
-from sys import stdout
+import sys
 from lookup import lookup
-def nagios(blob, env, subcommand):
+def nagios(blob, subcommand, env=None):
 	"""Processes commands to return data in nagios's format.
 	"""
-	if subcommand[1]=='check': 
-		for line in nagiosCheck(blob, "state", env): 
-			print line
-	else: 
-		print "Unrecognized command: {0}".format(subcommand[1])
 
-def nagiosCheck(blob, query, env):
+	if (subcommand[1]=='check') | (len(subcommand)<2) : #Deafult to this if too few arguments provided
+                response, exitCode = nagiosCheckLB(blob, env)
+        else: 
+                response= "Unrecognized command: {0}".format(subcommand[1])
+                exitCode=3
+        if exitCode==0: serviceState = "OK"
+        elif exitCode==1: serviceState = "WARNING"
+        elif exitCode==2: serviceState = "CRITICAL"
+        else: serviceState="UNKNOWN"
+        print "{0} - {1}".format(serviceState, "\n".join(response))
+        sys.exit(exitCode)
 
+def nagiosCheckLB(blob, env=None):
         results=[]
-        if query == 'upstream':
-                for upstream in blob["upstreams"]:
-                        for instance in blob["upstreams"][upstream]:
-                                results.append("!".join([instance["server"], upstream]))
-        elif query == 'hostname':
-                for upstream in blob["upstreams"]:
-                        for instance in blob["upstreams"][upstream]:
-                                results.append("!".join([instance["server"], lookup(instance["server"], env)]))
-        else:
-                for upstream in blob["upstreams"]:
-                        for instance in blob["upstreams"][upstream]:
-                                results.append("!".join([lookup(instance["server"], env), str(instance[query])]))
-        return results
+        code="0"
+        okStates=["up"]
+        criticalStates=["down","unavail","unhealthy"]
+        warningStates=["warning"]
+        for upstream in blob["upstreams"]:
+                for instance in blob["upstreams"][upstream]:
+                        if instance["state"] in okStates: pass
+                        elif (instance["state"] in warningStates) & (code != 2): 
+                                code=1
+                                results.append(" - ".join([
+                                        upstream,
+                                        lookup(instance["server"], env), #gets the hostname
+                                        instance["state"],
+                                        ]))
+                        elif instance["state"] in criticalStates: 
+                                code=2
+                                results.append(" - ".join([
+                                        upstream,
+                                        lookup(instance["server"], env), #gets the hostname
+                                        instance["state"],
+                                        ]))
+                        elif (code!=2) | (code!=1) : 
+                                code=3
+                                results.append(" - ".join([
+                                        upstream,
+                                        lookup(instance["server"], env), #gets the hostname
+                                        instance["state"],
+                                        ]))
+        return results, code
