@@ -46,7 +46,6 @@ statusJson=json.loads(urlopen(nginxurl,timeout=args['timeout']).read())
 command=args['command']
 if command[0] == 'blob': print statusJson
 elif command[0] == 'state': state(blob)
-elif command[0] == 'cacti': cacti(statusJson, args['env'], command)
-elif command[0] == 'nagios': print "NYI"
+elif command[0] == 'cacti': cacti(statusJson, command, env=args['env'])
 elif command[0] == None: print "no command \n"
 else: print "Command not recognized: {0}".format(command[0])

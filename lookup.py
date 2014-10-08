@@ -1,6 +1,6 @@
 import socket
 
-def lookup(address, env=False):
+def lookup(address, env=None):
 	"""Return hostname of host at given address.
 	Returns address if dns doesn't respond.
 
@@ -15,7 +15,7 @@ def lookup(address, env=False):
 	else:
 		return hostname
 
-def ip(address, env=False):
+def ip(address, env=None):
 	"""Split the address from its port, since nginx passes
 	it over together.
 	eg, 8.8.8.8:80 returns 8.8.8.8

@@ -1,6 +1,6 @@
 from sys import stdout
 from lookup import lookup
-def cacti(blob, env, subcommand):
+def cacti(blob, subcommand, env=None):
 	"""Processes commands to return data in cacti's format.
 	"""
 	if len(subcommand)<2: #Default to providing an index if too few inputs are provided.
@@ -28,7 +28,7 @@ def cactiIndex(blob):
 			results.append(instance["server"])
 	return results
 
-def cactiQuery(blob, query, env):
+def cactiQuery(blob, query, env=None):
 
 	results=[]
 	if query == 'upstream':
