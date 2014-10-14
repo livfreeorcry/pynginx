@@ -13,7 +13,7 @@ def nagios(blob, subcommand, env=None):
         elif exitCode==1: serviceState = "WARNING"
         elif exitCode==2: serviceState = "CRITICAL"
         else: serviceState="UNKNOWN"
-        print "{0} {1}".format(serviceState, "\n".join(response))
+        print "{0} {1}".format(serviceState, ", ".join(response))
         sys.exit(exitCode)
 
 def nagiosCheckLB(blob, env=None):
