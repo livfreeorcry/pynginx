@@ -34,7 +34,7 @@ args = vars(parser.parse_args())
 nginxurl="{0}{1}{2}".format(args['secure'], args['address'], args['url'])
 
 
-def state(blob):
+def state(blob, env):
 	#Simply prints out a few pieces of info as a simple test.
 	for upstream in statusJson["upstreams"]:
 		for instance in statusJson["upstreams"][upstream]:
@@ -46,7 +46,7 @@ def state(blob):
 statusJson=json.loads(urlopen(nginxurl,timeout=args['timeout']).read())
 command=args['command']
 if command[0] == 'blob': print statusJson
-elif command[0] == 'state': state(blob)
+elif command[0] == 'state': state(statusJson, args['env'] )
 elif command[0] == 'cacti': cacti(statusJson, args['env'], command)
 elif command[0] == 'nagios': nagios(statusJson, command, env=args['env'])
 elif command[0] == None: print "no command \n"

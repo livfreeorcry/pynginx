@@ -4,7 +4,7 @@ def nagios(blob, subcommand, env=None):
 	"""Processes commands to return data in nagios's format.
 	"""
 
-	if (subcommand[1]=='check') | (len(subcommand)<2) : #Deafult to this if too few arguments provided
+	if (len(subcommand)<2) or (subcommand[1]=='check') : #Deafult to this if too few arguments provided
                 response, exitCode = nagiosCheckLB(blob, env)
         else: 
                 response= "Unrecognized command: {0}".format(subcommand[1])
@@ -13,12 +13,12 @@ def nagios(blob, subcommand, env=None):
         elif exitCode==1: serviceState = "WARNING"
         elif exitCode==2: serviceState = "CRITICAL"
         else: serviceState="UNKNOWN"
-        print "{0} - {1}".format(serviceState, "\n".join(response))
+        print "{0} {1}".format(serviceState, "\n".join(response))
         sys.exit(exitCode)
 
 def nagiosCheckLB(blob, env=None):
         results=[]
-        code="0"
+        code=0
         okStates=["up"]
         criticalStates=["down","unavail","unhealthy"]
         warningStates=["warning"]
@@ -45,5 +45,5 @@ def nagiosCheckLB(blob, env=None):
                                         upstream,
                                         lookup(instance["server"], env), #gets the hostname
                                         instance["state"],
-                                        ]))
+                                        ]))                  
         return results, code
