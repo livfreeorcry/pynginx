@@ -27,21 +27,21 @@ def nagiosCheckLB(blob, env=None):
                         if instance["state"] in okStates: pass
                         elif (instance["state"] in warningStates) & (code != 2): 
                                 code=1
-                                results.append(" - ".join([
+                                results.append("  ".join([
                                         upstream,
                                         lookup(instance["server"], env), #gets the hostname
                                         instance["state"],
                                         ]))
                         elif instance["state"] in criticalStates: 
                                 code=2
-                                results.append(" - ".join([
+                                results.append("  ".join([
                                         upstream,
                                         lookup(instance["server"], env), #gets the hostname
                                         instance["state"],
                                         ]))
                         elif (code!=2) | (code!=1) : 
                                 code=3
-                                results.append(" - ".join([
+                                results.append("  ".join([
                                         upstream,
                                         lookup(instance["server"], env), #gets the hostname
                                         instance["state"],
