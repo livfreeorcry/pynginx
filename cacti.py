@@ -18,7 +18,7 @@ def cacti(blob, subcommand, env):
 	elif subcommand[1]=='connections':
 		stdout.write( str( blob["connections"][subcommand[2]] ) )
 	elif subcommand[1]=='requests':
-		stdout.write( str( blob["connections"][subcommand[2]] ) )
+		stdout.write( str( blob["requests"][subcommand[2]] ) )
 	else: 
 		print "Unrecognized command: {0}".format(subcommand[1])
 
