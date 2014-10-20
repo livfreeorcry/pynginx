@@ -1,6 +1,6 @@
 from sys import stdout
 from lookup import lookup
-def cacti(blob, subcommand, env=None):
+def cacti(blob, subcommand, env):
 	"""Processes commands to return data in cacti's format.
 	"""
 	if len(subcommand)<2: #Default to providing an index if too few inputs are provided.
@@ -15,6 +15,10 @@ def cacti(blob, subcommand, env=None):
 			print line
 	elif subcommand[1]=='get':
 		stdout.write( str(cactiGet(blob, subcommand[2], subcommand[3], env)) )
+	elif subcommand[1]=='connections':
+		stdout.write( str( blob["connections"][subcommand[2]] ) )
+	elif subcommand[1]=='requests':
+		stdout.write( str( blob["connections"][subcommand[2]] ) )
 	else: 
 		print "Unrecognized command: {0}".format(subcommand[1])
 
@@ -28,7 +32,7 @@ def cactiIndex(blob):
 			results.append(instance["server"])
 	return results
 
-def cactiQuery(blob, query, env=None):
+def cactiQuery(blob, query, env):
 
 	results=[]
 	if query == 'upstream':
