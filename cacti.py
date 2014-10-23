@@ -15,11 +15,9 @@ def cacti(blob, subcommand, env):
 			print line
 	elif subcommand[1]=='get':
 		stdout.write( str(cactiGet(blob, subcommand[2], subcommand[3], env)) )
-	elif subcommand[1]=='connections' or subcommand[1]=='requests':
-		for L in blob[subcommand[1]]: 
-			stdout.write(
-		 		":".join( [str(L), str(blob[subcommand[1]][L])]) + " "
-			)
+	elif subcommand[1]=='connections':
+		for L in blob['connections']: stdout.write( ":".join( [str(L), str(blob['connections'][L])]) + " " )
+		for L in blob['requests']: stdout.write( ":".join( [str(L), str(blob['requests'][L])]) + " ")
 	else: 
 		print "Unrecognized command: {0}".format(subcommand[1])
 
