@@ -8,6 +8,7 @@ from nagios import nagios
 import argparse
 import datetime
 import json
+import re
 
 
 #Sets up command line positional args. 'help' strings should clarify each flag.
@@ -26,10 +27,12 @@ parser.add_argument('-e','--environment', dest='env', default=None,
 	help="For environment specific shenanigans. dev, prod, nj.")
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_const',
 	const=True, default=False)
+parser.add_argument('-r', '--regex', dest='regex', default='.*',
+	help="Regular expression used to filter upstreams.")
 
 #Put input into its proper places.
 args = vars(parser.parse_args())
-
+regex=r"{0}".format(args['regex'])
 #puts the pieces together for the Nginx status page's URL as string
 nginxurl="{0}{1}{2}".format(args['secure'], args['address'], args['url'])
 
@@ -47,7 +50,7 @@ statusJson=json.loads(urlopen(nginxurl,timeout=args['timeout']).read())
 command=args['command']
 if command[0] == 'blob': print statusJson
 elif command[0] == 'state': state(statusJson, args['env'] )
-elif command[0] == 'cacti': cacti(statusJson, command, env=args['env'])
-elif command[0] == 'nagios': nagios(statusJson, command, env=args['env'])
+elif command[0] == 'cacti': cacti(statusJson, command, regex, env=args['env'])
+elif command[0] == 'nagios': nagios(statusJson, command, regex, env=args['env'])
 elif command[0] == None: print "no command \n"
 else: print "Command not recognized: {0}".format(command[0])
