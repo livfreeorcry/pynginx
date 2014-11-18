@@ -1,7 +1,7 @@
 import sys
 from lookup import lookup
 from re import match
-def nagios(blob, subcommand, regex, env=None):
+def nagios(blob, subcommand, env=None):
 	"""Processes commands to return data in nagios's format.
 	"""
 
@@ -57,7 +57,7 @@ def nagiosCheckLB(blob, regex, env=None):
         warningStates=["warning"]
         for upstream in blob["upstreams"]:
                 for instance in blob["upstreams"][upstream]:
-                        if instance["state"] not in okStates and match(regex, upstream):
+                        if instance["state"] not in okStates:
                                 results.append("  ".join([
                                         lookup(instance["server"], env), #gets the hostname
                                         upstream,
@@ -66,5 +66,7 @@ def nagiosCheckLB(blob, regex, env=None):
                                 if (instance["state"] in criticalStates): code = 2
                                 elif (instance["state"] in warningStates) and (code != 2): code = 1
                                 elif code == 0: code = 3
+        if results==[]:
+                results=["All hosts in up state"]                       
         return results, code
  
