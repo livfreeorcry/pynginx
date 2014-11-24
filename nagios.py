@@ -6,7 +6,7 @@ def nagios(blob, subcommand, regex, env=None):
 	"""
 
 	if (len(subcommand)<2) or (subcommand[1]=='check') : #Deafult to this if too few arguments provided
-                response, exitCode = nagiosCheckLB(blob, env)
+                response, exitCode = nagiosCheckLB(blob, regex, env)
                 response = ", ".join(response)
         elif (subcommand[1]=='connections') and (len(subcommand)>=3):
                 warn,crit = subcommand[2].split(':')
@@ -47,7 +47,7 @@ def nagiosMaxConns(blob, warn, crit):
                                 pass
         return results, code
 
-def nagiosCheckLB(blob, env=None):
+def nagiosCheckLB(blob, regex, env=None):
         results=[]
         code=0
         okStates=["up"]
