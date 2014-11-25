@@ -16,9 +16,9 @@ def nagios(blob, subcommand, regex, env=None):
                 response= "Unrecognized command: {0}".format(subcommand[1])
                 exitCode=3
         if exitCode==0: serviceState = "OK"
-        elif exitCode==1: serviceState = "WARNING"
-        elif exitCode==2: serviceState = "CRITICAL"
-        else: serviceState="UNKNOWN"
+        elif exitCode==1: serviceState = "WARNING:"
+        elif exitCode==2: serviceState = "CRITICAL:"
+        else: serviceState="UNKNOWN:"
         print "{0} {1}".format(serviceState, response)
         sys.exit(exitCode)
 
