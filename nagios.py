@@ -38,14 +38,14 @@ def nagiosMaxConns(blob, warn, crit, env):
                                 results.append("  ".join([
                                         lookup(instance["server"], env), #gets the hostname
                                         upstream,
-                                        instance["active"],
+                                        str(instance["active"]),
                                 ]))
                         elif pct > warn and code != 2:
                                 code = 1
                                 results.append("  ".join([
                                         lookup(instance["server"], env), #gets the hostname
                                         upstream,
-                                        instance["active"],
+                                        str(instance["active"]),
                                 ]))
         return results, code
 
