@@ -10,7 +10,7 @@ def nagios(blob, subcommand, regex, env=None):
                 response = ", ".join(response)
         elif (subcommand[1]=='connections') and (len(subcommand)>=3):
                 warn,crit = subcommand[2].split(':')
-                response, exitCode = nagiosMaxConns(blob, int(warn), int(crit))
+                response, exitCode = nagiosMaxConns(blob, int(warn), int(crit), env)
                 response = ", ".join(response)
         else: 
                 response= "Unrecognized command: {0}".format(subcommand[1])
@@ -22,7 +22,7 @@ def nagios(blob, subcommand, regex, env=None):
         print "{0} {1}".format(serviceState, response)
         sys.exit(exitCode)
 
-def nagiosMaxConns(blob, warn, crit):
+def nagiosMaxConns(blob, warn, crit, env):
         results=[]
         code=0
         pct=0
