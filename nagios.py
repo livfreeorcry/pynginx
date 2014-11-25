@@ -25,26 +25,28 @@ def nagios(blob, subcommand, regex, env=None):
 def nagiosMaxConns(blob, warn, crit):
         results=[]
         code=0
+        pct=0
         for upstream in blob["upstreams"]:
                 for instance in blob["upstreams"][upstream]:
                         try:
                                 pct = (int(instance["active"]) * 100) / int(instance["max_conns"])
-                                if pct > crit:
-                                        code = 2
-                                        results.append("  ".join([
-                                                lookup(instance["server"], env), #gets the hostname
-                                                upstream,
-                                                instance["active"],
-                                        ]))
-                                elif pct > warn and code != 2:
-                                        code = 1
-                                        results.append("  ".join([
-                                                lookup(instance["server"], env), #gets the hostname
-                                                upstream,
-                                                instance["active"],
-                                        ]))
+
                         except:
-                                pass
+                                break
+                        if pct > crit:
+                                code = 2
+                                results.append("  ".join([
+                                        lookup(instance["server"], env), #gets the hostname
+                                        upstream,
+                                        instance["active"],
+                                ]))
+                        elif pct > warn and code != 2:
+                                code = 1
+                                results.append("  ".join([
+                                        lookup(instance["server"], env), #gets the hostname
+                                        upstream,
+                                        instance["active"],
+                                ]))
         return results, code
 
 def nagiosCheckLB(blob, regex, env=None):
