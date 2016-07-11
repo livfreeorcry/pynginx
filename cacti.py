@@ -28,7 +28,7 @@ def cactiIndex(blob, regex):
 	These must be unique for cacti"""
 	results=[]
 	for upstream in blob["upstreams"]:
-		for instance in blob["upstreams"][upstream]:
+		for instance in blob["upstreams"][upstream]["peers"]:
 			if match(regex,upstream): results.append(instance["server"])
 	return results
 
@@ -37,22 +37,22 @@ def cactiQuery(blob, query, regex, env):
 	results=[]
 	if query == 'upstream':
 		for upstream in blob["upstreams"]:
-			for instance in blob["upstreams"][upstream]:
+			for instance in blob["upstreams"][upstream]["peers"]:
 				if match(regex,upstream): results.append("!".join([instance["server"], upstream]))
 	elif query == 'hostname':
 		for upstream in blob["upstreams"]:
-			for instance in blob["upstreams"][upstream]:
+			for instance in blob["upstreams"][upstream]["peers"]:
 				if match(regex,upstream): results.append("!".join([instance["server"], lookup(instance["server"], env)]))
 	else:
 		for upstream in blob["upstreams"]:
-			for instance in blob["upstreams"][upstream]:
+			for instance in blob["upstreams"][upstream]["peers"]:
 				if match(regex,upstream): results.append("!".join([instance["server"], str(instance[query])]))
 	return results
 
 def cactiGet(blob, query, index, regex, env):
 	index=str(index)
 	for upstream in blob["upstreams"]:
-		for instance in blob["upstreams"][upstream]:
+		for instance in blob["upstreams"][upstream]["peers"]:
 			if instance["server"]==index and match(regex,upstream):
 				if query == "hostname":
 					return lookup(instance["server"], env)
