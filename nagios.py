@@ -26,7 +26,7 @@ def nagiosMaxConns(blob, warn, crit):
         results=[]
         code=0
         for upstream in blob["upstreams"]:
-                for instance in blob["upstreams"][upstream]:
+                for instance in blob["upstreams"][upstream]["peers"]:
                         try:
                                 pct = (int(instance["active"]) * 100) / int(instance["max_conns"])
                                 if pct > crit:
@@ -54,7 +54,7 @@ def nagiosCheckLB(blob, env=None):
         criticalStates=["down","unavail","unhealthy"]
         warningStates=["warning"]
         for upstream in blob["upstreams"]:
-                for instance in blob["upstreams"][upstream]:
+                for instance in blob["upstreams"][upstream]["peers"]:
                         if instance["state"] not in okStates:
                                 results.append("  ".join([
                                         lookup(instance["server"], env), #gets the hostname

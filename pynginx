@@ -40,7 +40,7 @@ nginxurl="{0}{1}{2}".format(args['secure'], args['address'], args['url'])
 def state(blob, env):
 	#Simply prints out a few pieces of info as a simple test.
 	for upstream in statusJson["upstreams"]:
-		for instance in statusJson["upstreams"][upstream]:
+		for instance in statusJson["upstreams"][upstream]["peers"]:
 			state=instance["state"]
 			downtime=str(datetime.timedelta( seconds = (instance["downtime"]/1000)))
 			host=lookup(instance["server"], env)
