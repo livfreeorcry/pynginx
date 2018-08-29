@@ -1,4 +1,5 @@
 import sys
+import re
 from lookup import lookup
 from re import match
 def nagios(blob, subcommand, env=None):
@@ -56,14 +57,16 @@ def nagiosCheckLB(blob, env=None):
         for upstream in blob["upstreams"]:
                 for instance in blob["upstreams"][upstream]["peers"]:
                         if instance["state"] not in okStates:
-                                results.append("  ".join([
-                                        lookup(instance["server"], env), #gets the hostname
-                                        upstream,
-                                        instance["state"],
-                                        ]))
-                                if (instance["state"] in criticalStates): code = 2
-                                elif (instance["state"] in warningStates) and (code != 2): code = 1
-                                elif code == 0: code = 3
+                                if re.match('app2', upstream) is None:
+	                                results.append("  ".join([
+        	                                lookup(instance["server"], env), #gets the hostname
+	                                        upstream,
+	                                        instance["state"],
+	                                        ]))
+				
+	                                if (instance["state"] in criticalStates): code = 2
+		                        elif (instance["state"] in warningStates) and (code != 2): code = 1
+	                                elif code == 0: code = 3
         if results==[]:
                 results=["All hosts in up state"]                       
         return results, code
